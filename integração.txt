@@ -1,0 +1,67 @@
+LOGIN - POST /auth/login
+
+REQUEST
+body request deve ser passado
+{ 
+    email, 
+    password 
+}
+
+RESPONSE BODY
+quando o login der SUCESSO a api retorna
+{
+    ok: true,
+    message: 'Aluno autenticado',
+    data: authToken, (sendo esse o uuid que será utilizado no Authorization das rotas de avaliações)
+}
+
+RESPONSE
+ERROR
+quando dá erro de BODY, a api responde
+{
+    ok: false,
+    message: "mensagem do erro",
+    errors: [{
+        field: "o campo que deu erro,
+        message: "o motivo do campo estar errado"
+    }]
+}
+
+quando as credenciais forem invalidas a api retorna
+{
+    ok: false,
+    message: 'Credencias inválidas',
+}
+
+
+
+
+LOGOUT - POST /auth/logout
+
+
+request.body
+request.headers
+é preciso prover o TOKEN em request.headers.authorization
+
+ERROR de request
+{
+    ok: false,
+    message: 'Usuário não autorizado',
+    errors: [],
+}
+
+ERRO INTERNO
+{
+    ok: false,
+    message: "string",
+}
+
+SUCESSO
+{
+    ok: true,
+    message: 'Logout realizado com sucesso',
+}
+
+
+
+
