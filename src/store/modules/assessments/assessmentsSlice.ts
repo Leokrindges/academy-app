@@ -1,5 +1,6 @@
 import { createEntityAdapter, createSlice } from "@reduxjs/toolkit";
-import { fetchAllAssessments } from "./assessments.actions";
+import { createAssesments, fetchAllAssessments } from "./assessments.actions";
+import { enqueueSnackbar } from "notistack";
 
 // 1 - formato de cada dado armazenado na lista
 export interface Assessment {
@@ -8,7 +9,6 @@ export interface Assessment {
   rate: string;
   deadline: string; // 2024-08-06 ISO8601 primitivos
 }
-
 /*
 
 assessments: {
@@ -27,6 +27,9 @@ const assessmentsSlice = createSlice({
   name: "assessments",
   initialState: assessmentsAdapter.getInitialState({
     message: "",
+    title: "",
+    rate: "",
+    deadline: "",
     pagination: {
       limit: 10,
       page: 1,
@@ -36,9 +39,6 @@ const assessmentsSlice = createSlice({
   }),
   reducers: {
     // todas as ações síncronas possíveis para com esse estado
-
-    // add
-    addAssessment: assessmentsAdapter.addOne,
 
     // update
     updateAssessment: assessmentsAdapter.updateOne,
@@ -61,11 +61,23 @@ const assessmentsSlice = createSlice({
 
       currentState.message = action.payload.message;
     });
+
+    builder.addCase(createAssesments.fulfilled, (currentState, action) => {
+      if (action.payload.ok) {
+        assessmentsAdapter.addOne(currentState, action.payload.data!);
+        currentState.deadline = action.payload.data!.deadline;
+        currentState.rate = action.payload.data!.rate;
+        currentState.title = action.payload.data!.title;
+      }
+
+      enqueueSnackbar(action.payload.message, {
+        variant: action.payload.ok ? "success" : "error",
+      });
+    });
   },
 });
 
-export const { addAssessment, updateAssessment, deleteAssessment, resetAssessments } =
-  assessmentsSlice.actions;
+export const { updateAssessment, deleteAssessment, resetAssessments } = assessmentsSlice.actions;
 
 export const assessmentsReducer = assessmentsSlice.reducer;
 

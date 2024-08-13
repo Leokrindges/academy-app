@@ -63,5 +63,40 @@ SUCESSO
 }
 
 
+CREATE ASSESMENTS
+request.headers
+é preciso prover o TOKEN em request.headers.authorization
+
+REQUEST
+body request deve ser passado
+{ 
+    title, 
+    rate,
+    deadline
+}
+
+RESPONSE ERROR de request
+{
+    ok: false,
+    message: 'Usuário não autorizado',
+    errors: [],
+}
+
+RESPONSE SUCESSO
+{
+    ok: true,
+    message: 'Logout realizado com sucesso',
+    data: {
+        "id": string,
+		"title": string,
+		"rate": string,
+		"deadline": string,
+		"deleted": false,
+		"createdAt": string,
+		"updatedAt": string,
+		"deletedAt": null,
+		"studentId": string
+    }
+}
 
 

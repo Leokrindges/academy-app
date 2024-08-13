@@ -47,7 +47,39 @@ export async function getAllAssessmentService(
 }
 
 // CADASTRAR
-//export async function createAssessmentService(): Promise<ResponseAPI<unknown>> {}
+export async function createAssessmentService(
+  token: string,
+  deadline: string,
+  rate: string,
+  title: string,
+): Promise<ResponseAPI<AssessmentAPI>> {
+  try {
+    const response = await academyApi.post(
+      "/assessments",
+      {
+        deadline,
+        rate,
+        title,
+      },
+      {
+        headers: { Authorization: token },
+      },
+    );    
+
+    return response.data;
+  } catch (err) {
+    if (isAxiosError(err)) {
+      // Quando a api retorna qualquer tipo de erro
+      return err.response?.data;
+    }
+
+    // Ou quando o dev codou errado
+    return {
+      ok: false,
+      message: "Aconteceu um erro inesperado",
+    };
+  }
+}
 
 // ATUALIZAR
 //export async function updateAssessmentService(): Promise<ResponseAPI<unknown>> {}

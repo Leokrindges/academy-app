@@ -7,14 +7,16 @@ import {
   DialogTitle,
   TextField,
 } from "@mui/material";
-import { v4 as uuid } from "uuid";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { addAssessment, updateAssessment } from "../../store/modules/assessments/assessmentsSlice";
+import { updateAssessment } from "../../store/modules/assessments/assessmentsSlice";
 import { selectModal, setModal } from "../../store/modules/modal/modalSlice";
+import { createAssesments } from "../../store/modules/assessments/assessments.actions";
+import { selectUserLogged } from "../../store/modules/userLogged/userLoggedSlice";
 
 export function Modal() {
   const modal = useAppSelector(selectModal);
   const dispatch = useAppDispatch();
+  const userLogged = useAppSelector(selectUserLogged);
 
   function handleClose() {
     dispatch(setModal({ mode: null, open: false }));
@@ -24,9 +26,10 @@ export function Modal() {
     event.preventDefault();
 
     if (modal.mode === "create") {
+
       dispatch(
-        addAssessment({
-          id: uuid(),
+        createAssesments({
+          token: userLogged.authToken,
           title: event.currentTarget["title-assessment"].value,
           rate: Number(event.currentTarget["rate-assessment"].value),
           deadline: event.currentTarget["deadline-assessment"].value,
